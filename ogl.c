@@ -1,40 +1,103 @@
+/************************************************************************
+ * File Name: ogl.c
+ * Author: HuangYang
+ * Mail: elious.huang@gmail.com
+ * Created Time: Sun 19 Nov 2017 09:13:37 PM CST
+ ************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include <GLFW/glfw3.h>
+
+void add_shader(GLuint shader_program, const char *shader_text, GLenum shader_type)
+{
+    GLuint shader_obj = glCreateShader(shader_type);
+    const GLchar *p[1];
+    p[0] = shader_text;
+    GLint lengths[1];
+    lengths[0] = strlen(shader_text);
+    glShaderSource(shader_obj, 1, p, lengths);
+    GLint success;
+    glCompileShader(shader_obj);
+    glGetShaderiv(shader_obj, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        GLchar info[1024];
+        glGetShaderInfoLog(shader_obj, 1024, NULL, info);
+        fprintf(stderr, "compiler shader error: %s\n", info);
+        exit(EXIT_FAILURE);
+    }
+    glAttachShader(shader_program, shader_obj);
+}
+
+void read_file(const char *name, char *buf)
+{
+    FILE *fp;
+    char data;
+    fp = fopen(name, "r");
+    while ((data = fgetc(fp)) != EOF)
+    {
+        *buf ++ = data;
+    }
+}
+
+void compiler_shaders(void)
+{
+    GLuint shader_program = glCreateProgram();
+    char vs_buf[512], fs_buf[512];
+    read_file("./shader.vs", vs_buf);
+    read_file("./shader.fs", fs_buf);
+
+    add_shader(shader_program, vs_buf, GL_VERTEX_SHADER);
+    add_shader(shader_program, fs_buf, GL_FRAGMENT_SHADER);
+
+    glLinkProgram(shader_program);
+    glValidateProgram(shader_program);
+    glUseProgram(shader_program);
+}
 
 int main(int argc, char **argv)
 {
-    //gltSetWorkingDirectory(argv[0]);
     if (!glfwInit())
     {
-        fprintf(stderr, "failed to initizlize GLFW\n");
+        fprintf(stderr, "init glfw failed\n");
         return -1;
     }
 
-    GLFWwindow *window = glfwCreateWindow(1024, 768, "test", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(640, 480, "test", NULL, NULL);
     if (NULL == window)
     {
-        fprintf(stderr, "failed to open GLFW window\n");
+        fprintf(stderr, "create window failed\n");
         return -1;
     }
+
     glfwMakeContextCurrent(window);
 
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    const char *version = glGetString(GL_VERSION);
+    fprintf(stdout, "version = %s\n", version);
 
-    const char *version = (const char *)glGetString(GL_VERSION);
-    fprintf(stdout, "OpenGL version: %s\n", version);
+    GLfloat vertex_buffer[] = {-1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
 
-    glClearColor(0.0, 0.0f, 0.4f, 0.0f);
+    GLuint VBO;
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    compiler_shaders();
     do
     {
-        glClearColor(1.0, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDisableVertexAttribArray(0);
+
         glfwSwapBuffers(window);
-        sleep(1);
-        glClearColor(0.0, 1.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window);
-        sleep(1);
         glfwPollEvents();
     }while( glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
             glfwWindowShouldClose(window) == 0);
@@ -43,3 +106,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
