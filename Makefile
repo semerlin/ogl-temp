@@ -1,8 +1,8 @@
 ogl : ogl.o
-	gcc ogl.o -lglfw3 -Wl,-rpath=/usr/lib/nvidia-384 -L/usr/lib/nvidia-384 -lGL -lX11 -lpthread -lm -ldl -o ogl
+	g++ ogl.o -lglfw3 -I/usr/local/include -Wl,-rpath=/usr/lib/nvidia-384 -L/usr/lib/nvidia-384 -lGL -lX11 -lpthread -lm -ldl -o ogl
 
-ogl.o : ogl.c
-	gcc -c -g -ggdb -O0 ogl.c
+ogl.o : ogl.cpp
+	g++ -c -g -ggdb -O0 ogl.cpp
 
 .PHONY : clean
 
