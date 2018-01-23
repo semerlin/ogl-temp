@@ -23,6 +23,6 @@ endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 # add sub-directory 
 #-------------------------------------------------
 add_subdirectory(tutorial01)
-#add_subdirectory(tutorial2)
+add_subdirectory(tutorial02)
 
 

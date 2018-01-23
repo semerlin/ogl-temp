@@ -1,12 +1,14 @@
 set(LIB_LIST
     glfw3
+    GLEW 
     pthread
     GL
     X11
     m
     dl)
 
-add_executable(tutorial2 tutorial2.cpp)
-target_link_libraries(tutorial2 ${LIB_LIST})
+add_executable(tutorial02 tutorial02.cpp)
+target_link_libraries(tutorial02 ${LIB_LIST})
+
 
 

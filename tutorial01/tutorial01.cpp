@@ -40,11 +40,6 @@ int main(int argc, char **argv)
     //triangle coordinate
     GLfloat vertex_buffer[] = {-1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
 
-    //create vao object
-    GLuint vao_id;
-    glGenVertexArrays(1, &vao_id);
-    glBindVertexArray(vao_id);
-
     //create vbo object
     GLuint vbo_id;
     glGenBuffers(1, &vbo_id);
@@ -58,9 +53,13 @@ int main(int argc, char **argv)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glEnableVertexAttribArray(0);
+        //bind vbo
         glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+        glEnableVertexAttribArray(0);
+
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+        //draw model
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
