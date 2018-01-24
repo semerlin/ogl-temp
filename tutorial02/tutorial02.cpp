@@ -1,9 +1,3 @@
-/************************************************************************
- * File Name: ogl.c
- * Author: HuangYang
- * Mail: elious.huang@gmail.com
- * Created Time: Sun 19 Nov 2017 09:13:37 PM CST
- ************************************************************************/
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

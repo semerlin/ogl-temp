@@ -1,5 +1,6 @@
 set(LIB_LIST
     glfw3
+    GLEW
     pthread
     GL
     X11

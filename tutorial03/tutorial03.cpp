@@ -1,14 +1,12 @@
-/************************************************************************
- * File Name: ogl.c
- * Author: HuangYang
- * Mail: elious.huang@gmail.com
- * Created Time: Sun 19 Nov 2017 09:13:37 PM CST
- ************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <iostream>
+#include <fstream>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+using namespace std;
 
 void add_shader(GLuint shader_program, const char *shader_text, GLenum shader_type)
 {
@@ -74,8 +72,15 @@ int main(int argc, char **argv)
 
     glfwMakeContextCurrent(window);
 
-    const char *version = glGetString(GL_VERSION);
-    fprintf(stdout, "version = %s\n", version);
+    cout << "opengl version = " << glGetString(GL_VERSION) << endl;
+
+    //init glew
+    if (GLEW_OK != glewInit())
+    {
+        cout << "failed to initialize glew" << endl;
+        glfwTerminate();
+        return -1;
+    }
 
     GLfloat vertex_buffer[] = {-1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
 
