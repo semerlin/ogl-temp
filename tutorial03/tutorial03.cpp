@@ -1,20 +1,19 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 using namespace std;
 
-void add_shader(GLuint shader_program, const char *shader_text, GLenum shader_type)
+void add_shader(GLuint shader_program, const string &shader_text, GLenum shader_type)
 {
     GLuint shader_obj = glCreateShader(shader_type);
     const GLchar *p[1];
-    p[0] = shader_text;
+    p[0] = shader_text.c_str();
     GLint lengths[1];
-    lengths[0] = strlen(shader_text);
+    lengths[0] = shader_text.size();
     glShaderSource(shader_obj, 1, p, lengths);
     GLint success;
     glCompileShader(shader_obj);
@@ -23,27 +22,33 @@ void add_shader(GLuint shader_program, const char *shader_text, GLenum shader_ty
     {
         GLchar info[1024];
         glGetShaderInfoLog(shader_obj, 1024, NULL, info);
-        fprintf(stderr, "compiler shader error: %s\n", info);
+        cout << "complier shader failed: " << info << endl;
         exit(EXIT_FAILURE);
     }
     glAttachShader(shader_program, shader_obj);
 }
 
-void read_file(const char *name, char *buf)
+void read_file(const string &name, string &content)
 {
-    FILE *fp;
-    char data;
-    fp = fopen(name, "r");
-    while ((data = fgetc(fp)) != EOF)
+    ifstream file(name.c_str(), ifstream::in | ifstream::binary);
+    if (NULL == file)
     {
-        *buf ++ = data;
+        cout << "read file \"" << name << "\"" << "failed" << endl;
+        content = "";
+        return ;
+    }
+
+    char data = 0;
+    while (NULL != file.read(&data, 1))
+    {
+        content += data;
     }
 }
 
 void compiler_shaders(void)
 {
     GLuint shader_program = glCreateProgram();
-    char vs_buf[512], fs_buf[512];
+    string vs_buf, fs_buf;
     read_file("./shader.vs", vs_buf);
     read_file("./shader.fs", fs_buf);
 
