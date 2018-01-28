@@ -44,12 +44,11 @@ int main(int argc, char **argv)
     glGenBuffers(1, &vbo_id);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer), vertex_buffer, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
+    //set vertex attibute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glDisableVertexAttribArray(0);
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -59,10 +58,12 @@ int main(int argc, char **argv)
 
         //bind vao
         glBindVertexArray(vao_id);
+        glEnableVertexAttribArray(0);
 
         //draw model
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
+        glDisableVertexAttribArray(0);
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
