@@ -7,8 +7,8 @@ set(LIB_LIST
     m
     dl)
 
-add_executable(tutorial02 tutorial02.cpp)
-target_link_libraries(tutorial02 ${LIB_LIST})
+add_executable(tutorial02_dot tutorial02_dot.cpp)
+target_link_libraries(tutorial02_dot ${LIB_LIST})
 
 
 
