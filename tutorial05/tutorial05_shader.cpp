@@ -68,6 +68,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
     GLFWwindow *window = glfwCreateWindow(640, 480, "test", NULL, NULL);
     if (NULL == window)
     {
@@ -88,6 +91,10 @@ int main(int argc, char **argv)
     }
 
     GLfloat vertex_buffer[] = {-1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
+
+    GLuint vao_id;
+    glGenVertexArrays(1, &vao_id);
+    glBindVertexArray(vao_id);
 
     GLuint VBO;
     glGenBuffers(1, &VBO);
