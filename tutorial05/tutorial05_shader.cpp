@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -30,19 +31,19 @@ void add_shader(GLuint shader_program, const string &shader_text, GLenum shader_
 
 void read_file(const string &name, string &content)
 {
-    ifstream file(name.c_str(), ifstream::in | ifstream::binary);
-    if (NULL == file)
+    ifstream file(name.c_str(), ifstream::in);
+    if (!file.is_open())
     {
         cout << "read file \"" << name << "\"" << "failed" << endl;
         content = "";
         return ;
     }
 
-    char data = 0;
-    while (NULL != file.read(&data, 1))
-    {
-        content += data;
-    }
+    stringstream sstr;
+    sstr << file.rdbuf();
+    content = sstr.str();
+
+    file.close();
 }
 
 void compiler_shaders(void)
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
     GLFWwindow *window = glfwCreateWindow(640, 480, "test", NULL, NULL);
     if (NULL == window)
     {
-        fprintf(stderr, "create window failed\n");
+        cout << "create window failed\n" << endl;
         return -1;
     }
 
